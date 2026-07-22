@@ -58,7 +58,7 @@ if not Path(db_path).exists():
 def render_result(result, answer, df):
     st.write(answer)
     if df is not None and not df.empty:
-        st.dataframe(df, use_container_width=True)
+        st.dataframe(df, width="stretch")
     if result.sql:
         with st.expander("Show the SQL it wrote"):
             st.code(result.sql, language="sql")
@@ -130,7 +130,7 @@ if page == "Chat":
         "albums, tracks, customers, invoices and employees."
     )
     with st.expander("💡 What can I ask? (see the database contents)"):
-        st.dataframe(pd.DataFrame(cached_overview(db_path)), use_container_width=True)
+        st.dataframe(pd.DataFrame(cached_overview(db_path)), width="stretch")
         st.caption("Below is the exact schema text the AI receives with every question:")
         st.code(cached_schema(db_path), language="sql")
 
@@ -143,7 +143,7 @@ if page == "Chat":
         with st.chat_message("assistant"):
             st.write(entry["answer"])
             if entry.get("df") is not None and not entry["df"].empty:
-                st.dataframe(entry["df"], use_container_width=True)
+                st.dataframe(entry["df"], width="stretch")
             if entry.get("sql"):
                 with st.expander("Show the SQL it wrote"):
                     st.code(entry["sql"], language="sql")
@@ -153,7 +153,7 @@ if page == "Chat":
         st.write("Try one of these:")
         cols = st.columns(2)
         for i, example in enumerate(EXAMPLE_QUESTIONS):
-            if cols[i % 2].button(example, use_container_width=True):
+            if cols[i % 2].button(example, width="stretch"):
                 st.session_state.pending_question = example
                 st.rerun()
 
@@ -185,5 +185,5 @@ else:  # Stats
     st.subheader("Recent queries")
     st.dataframe(
         df[["timestamp", "model", "question", "status", "attempts", "latency_s"]].tail(50),
-        use_container_width=True,
+        width="stretch",
     )
