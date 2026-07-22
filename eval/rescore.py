@@ -10,6 +10,7 @@ Usage:
 
 import glob
 import json
+import sqlite3
 import sys
 from pathlib import Path
 
@@ -23,7 +24,8 @@ from text2sql.guardrails import execute  # noqa: E402
 
 
 def rescore_file(path: str, spider_dir: Path) -> None:
-    rows = [json.loads(line) for line in open(path, encoding="utf-8")]
+    with open(path, encoding="utf-8") as f:
+        rows = [json.loads(line) for line in f]
     old_correct = new_correct = 0
 
     for r in rows:
@@ -35,8 +37,8 @@ def rescore_file(path: str, spider_dir: Path) -> None:
                 _, pred_rows = execute(db, r["predicted"], timeout_s=30, max_rows=100_000)
                 _, gold_rows = execute(db, r["gold"], timeout_s=30, max_rows=100_000)
                 is_correct = results_match(pred_rows, gold_rows)
-            except Exception:
-                pass
+            except sqlite3.Error:
+                is_correct = False  # a query that no longer runs counts as wrong
         r["correct"] = is_correct
         new_correct += is_correct
 

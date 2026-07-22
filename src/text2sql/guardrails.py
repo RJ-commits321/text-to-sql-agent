@@ -46,10 +46,7 @@ def validate(sql: str) -> exp.Expression:
 
 def enforce_limit(tree: exp.Expression, row_limit: int) -> str:
     if tree.args.get("limit") is None:
-        try:
-            tree = tree.limit(row_limit)
-        except Exception:
-            pass  # expression type without a limit builder — read-only conn still protects us
+        tree = tree.limit(row_limit)
     return tree.sql(dialect="sqlite")
 
 
