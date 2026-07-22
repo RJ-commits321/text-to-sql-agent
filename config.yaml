@@ -1,0 +1,32 @@
+llm:
+  model: qwen2.5-coder:3b      # eval winner (73.5% Spider subset); switchable in UI / CLI
+  available_models:
+    - qwen2.5-coder:3b
+    - qwen2.5:3b
+    - llama3.2:3b
+    - qwen2.5:1.5b
+  num_ctx: 8192                # Ollama silently truncates at its small default otherwise
+  temperature: 0.0
+
+agent:
+  max_attempts: 3              # 1 initial try + up to 2 self-corrections
+  self_consistency: 1          # >1 = sample N queries, majority result wins (N× latency)
+  sc_temperature: 0.7          # sampling temperature when self_consistency > 1
+
+guardrails:
+  row_limit: 100               # LIMIT injected into queries that lack one (UI only)
+  max_result_rows: 500         # rows fetched back into the app
+  timeout_seconds: 10
+
+paths:
+  demo_db: data/chinook.db
+  spider_dir: data/spider
+  runtime_log: logs/queries.jsonl
+
+eval:
+  subset_size: 200
+  seed: 42
+  subset_file: eval/dev_subset.json
+  row_limit: 100000            # no meaningful LIMIT injection during eval, so results match gold
+                               # (eval also raises max_result_rows to this value — a 500-row
+                               # fetch cap once cost correct queries their score)

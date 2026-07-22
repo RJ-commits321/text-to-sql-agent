@@ -1,0 +1,10 @@
+# Bind to localhost only — without this Streamlit listens on all network
+# interfaces and anyone on the same Wi-Fi can reach the app.
+# (The Dockerfile intentionally overrides this with 0.0.0.0, which is correct
+# inside a container.)
+[server]
+address = "localhost"
+
+# Don't send usage telemetry to Streamlit Inc.
+[browser]
+gatherUsageStats = false

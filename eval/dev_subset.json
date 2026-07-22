@@ -1,0 +1,1002 @@
+[
+  {
+    "question": "Find the number of left handed winners who participated in the WTA Championships.",
+    "query": "SELECT count(DISTINCT winner_name) FROM matches WHERE tourney_name  =  'WTA Championships' AND winner_hand  =  'L'",
+    "db_id": "wta_1"
+  },
+  {
+    "question": "What is the number of employees from each city?",
+    "query": "SELECT count(*) ,  city FROM employee GROUP BY city",
+    "db_id": "employee_hire_evaluation"
+  },
+  {
+    "question": "List names of conductors in descending order of years of work.",
+    "query": "SELECT Name FROM conductor ORDER BY Year_of_Work DESC",
+    "db_id": "orchestra"
+  },
+  {
+    "question": "How many flights depart from City Aberdeen?",
+    "query": "SELECT count(*) FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.SourceAirport  =  T2.AirportCode WHERE T2.City  =  \"Aberdeen\"",
+    "db_id": "flight_2"
+  },
+  {
+    "question": "What is the number of countries with more than 2 car makers ?",
+    "query": "select count(*) from countries as t1 join car_makers as t2 on t1.countryid  =  t2.country group by t1.countryid having count(*)  >  2",
+    "db_id": "car_1"
+  },
+  {
+    "question": "How many different results are there for the battles?",
+    "query": "SELECT count(DISTINCT RESULT) FROM battle",
+    "db_id": "battle_death"
+  },
+  {
+    "question": "What is the total ticket expense of the visitors whose membership level is 1?",
+    "query": "SELECT sum(t2.Total_spent) FROM visitor AS t1 JOIN visit AS t2 ON t1.id  =  t2.visitor_id WHERE t1.Level_of_membership  =  1",
+    "db_id": "museum_visit"
+  },
+  {
+    "question": "What is the department description for the one whose name has the word computer?",
+    "query": "SELECT department_description FROM Departments WHERE department_name LIKE '%computer%'",
+    "db_id": "student_transcripts_tracking"
+  },
+  {
+    "question": "Find the number of distinct name of losers.",
+    "query": "SELECT count(DISTINCT loser_name) FROM matches",
+    "db_id": "wta_1"
+  },
+  {
+    "question": "What is the last transcript release date?",
+    "query": "SELECT transcript_date FROM Transcripts ORDER BY transcript_date DESC LIMIT 1",
+    "db_id": "student_transcripts_tracking"
+  },
+  {
+    "question": "Return the names of conductors that do not have the nationality \"USA\".",
+    "query": "SELECT Name FROM conductor WHERE Nationality != 'USA'",
+    "db_id": "orchestra"
+  },
+  {
+    "question": "Which year had the most matches?",
+    "query": "SELECT YEAR FROM matches GROUP BY YEAR ORDER BY count(*) DESC LIMIT 1",
+    "db_id": "wta_1"
+  },
+  {
+    "question": "What are the birth years and citizenships of the singers?",
+    "query": "SELECT Birth_Year ,  Citizenship FROM singer",
+    "db_id": "singer"
+  },
+  {
+    "question": "Which district has both stores with less than 3000 products and stores with more than 10000 products?",
+    "query": "SELECT district FROM shop WHERE Number_products  <  3000 INTERSECT SELECT district FROM shop WHERE Number_products  >  10000",
+    "db_id": "employee_hire_evaluation"
+  },
+  {
+    "question": "For each continent, list its id, name, and how many countries it has?",
+    "query": "SELECT T1.ContId ,  T1.Continent ,  count(*) FROM CONTINENTS AS T1 JOIN COUNTRIES AS T2 ON T1.ContId  =  T2.Continent GROUP BY T1.ContId;",
+    "db_id": "car_1"
+  },
+  {
+    "question": "Show the property type descriptions of properties belonging to that code.",
+    "query": "SELECT T2.property_type_description FROM Properties AS T1 JOIN Ref_Property_Types AS T2 ON T1.property_type_code  =  T2.property_type_code GROUP BY T1.property_type_code",
+    "db_id": "real_estate_properties"
+  },
+  {
+    "question": "Return the names and template ids for documents that contain the letter w in their description.",
+    "query": "SELECT document_name ,  template_id FROM Documents WHERE Document_Description LIKE \"%w%\"",
+    "db_id": "cre_Doc_Template_Mgt"
+  },
+  {
+    "question": "Return the number of flights departing from Aberdeen.",
+    "query": "SELECT count(*) FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.SourceAirport  =  T2.AirportCode WHERE T2.City  =  \"Aberdeen\"",
+    "db_id": "flight_2"
+  },
+  {
+    "question": "List the names of orchestras that have no performance.",
+    "query": "SELECT Orchestra FROM orchestra WHERE Orchestra_ID NOT IN (SELECT Orchestra_ID FROM performance)",
+    "db_id": "orchestra"
+  },
+  {
+    "question": "Find the name and location of the stadiums which some concerts happened in the years of both 2014 and 2015.",
+    "query": "SELECT T2.name ,  T2.location FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id  =  T2.stadium_id WHERE T1.Year  =  2014 INTERSECT SELECT T2.name ,  T2.location FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id  =  T2.stadium_id WHERE T1.Year  =  2015",
+    "db_id": "concert_singer"
+  },
+  {
+    "question": "What are the different template type codes, and how many documents use each type?",
+    "query": "SELECT T1.template_type_code ,  count(*) FROM Templates AS T1 JOIN Documents AS T2 ON T1.template_id  =  T2.template_id GROUP BY T1.template_type_code",
+    "db_id": "cre_Doc_Template_Mgt"
+  },
+  {
+    "question": "How many courses in total are listed?",
+    "query": "SELECT count(*) FROM Courses",
+    "db_id": "student_transcripts_tracking"
+  },
+  {
+    "question": "Find the id, last name and cell phone of the professionals who live in the state of Indiana or have performed more than two treatments.",
+    "query": "SELECT professional_id ,  last_name ,  cell_number FROM Professionals WHERE state  =  'Indiana' UNION SELECT T1.professional_id ,  T1.last_name ,  T1.cell_number FROM Professionals AS T1 JOIN Treatments AS T2 ON T1.professional_id  =  T2.professional_id GROUP BY T1.professional_id HAVING count(*)  >  2",
+    "db_id": "dog_kennels"
+  },
+  {
+    "question": "What is the horsepower of the car with the greatest accelerate?",
+    "query": "SELECT T1.horsepower FROM CARS_DATA AS T1 ORDER BY T1.accelerate DESC LIMIT 1;",
+    "db_id": "car_1"
+  },
+  {
+    "question": "How many poker players are there?",
+    "query": "SELECT count(*) FROM poker_player",
+    "db_id": "poker_player"
+  },
+  {
+    "question": "What are the template ids with template type description \"Presentation\".",
+    "query": "SELECT T2.template_id FROM Ref_template_types AS T1 JOIN Templates AS T2 ON T1.template_type_code  = T2.template_type_code WHERE T1.template_type_description  =  \"Presentation\"",
+    "db_id": "cre_Doc_Template_Mgt"
+  },
+  {
+    "question": "Give the name of the nation that uses the greatest amount of languages.",
+    "query": "SELECT T1.Name FROM country AS T1 JOIN countrylanguage AS T2 ON T1.Code  =  T2.CountryCode GROUP BY T1.Name ORDER BY COUNT(*) DESC LIMIT 1",
+    "db_id": "world_1"
+  },
+  {
+    "question": "What are the different template type codes, and how many templates correspond to each?",
+    "query": "SELECT template_type_code ,  count(*) FROM Templates GROUP BY template_type_code",
+    "db_id": "cre_Doc_Template_Mgt"
+  },
+  {
+    "question": "What are the minimum and maximum number of products across all the shops?",
+    "query": "SELECT min(Number_products) ,  max(Number_products) FROM shop",
+    "db_id": "employee_hire_evaluation"
+  },
+  {
+    "question": "What are the names of all cartoons directed by Ben Jones?",
+    "query": "SELECT Title FROM Cartoon WHERE Directed_by = \"Ben Jones\";",
+    "db_id": "tvshow"
+  },
+  {
+    "question": "How many different degrees are offered?",
+    "query": "SELECT count(DISTINCT degree_summary_name) FROM Degree_Programs",
+    "db_id": "student_transcripts_tracking"
+  },
+  {
+    "question": "How many times at most can a course enrollment result show in different transcripts? Also show the course enrollment id.",
+    "query": "SELECT count(*) ,  student_course_id FROM Transcript_Contents GROUP BY student_course_id ORDER BY count(*) DESC LIMIT 1",
+    "db_id": "student_transcripts_tracking"
+  },
+  {
+    "question": "Return the id and type code of the template that is used for the greatest number of documents.",
+    "query": "SELECT T1.template_id ,  T2.Template_Type_Code FROM Documents AS T1 JOIN Templates AS T2 ON T1.template_id  =  T2.template_id GROUP BY T1.template_id ORDER BY count(*) DESC LIMIT 1",
+    "db_id": "cre_Doc_Template_Mgt"
+  },
+  {
+    "question": "Count the number of United Airlines flights that arrive in Aberdeen.",
+    "query": "SELECT count(*) FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.DestAirport  =  T2.AirportCode JOIN AIRLINES AS T3 ON T3.uid  =  T1.Airline WHERE T2.City  =  \"Aberdeen\" AND T3.Airline  =  \"United Airlines\"",
+    "db_id": "flight_2"
+  },
+  {
+    "question": "Return the number of likes that the high schooler named Kyle has.",
+    "query": "SELECT count(*) FROM Likes AS T1 JOIN Highschooler AS T2 ON T1.student_id  =  T2.id WHERE T2.name  =  \"Kyle\"",
+    "db_id": "network_1"
+  },
+  {
+    "question": "What are the average ages of losers and winners across matches?",
+    "query": "SELECT avg(loser_age) ,  avg(winner_age) FROM matches",
+    "db_id": "wta_1"
+  },
+  {
+    "question": "Which dogs are of the rarest breed? Show their names and treatment dates.",
+    "query": "SELECT T1.name ,  T2.date_of_treatment FROM Dogs AS T1 JOIN Treatments AS T2 ON T1.dog_id  =  T2.dog_id WHERE T1.breed_code  =  ( SELECT breed_code FROM Dogs GROUP BY breed_code ORDER BY count(*) ASC LIMIT 1 )",
+    "db_id": "dog_kennels"
+  },
+  {
+    "question": "How many singers are there?",
+    "query": "SELECT count(*) FROM singer",
+    "db_id": "singer"
+  },
+  {
+    "question": "Which region is the city Kabul located in?",
+    "query": "SELECT Region FROM country AS T1 JOIN city AS T2 ON T1.Code  =  T2.CountryCode WHERE T2.Name  =  \"Kabul\"",
+    "db_id": "world_1"
+  },
+  {
+    "question": "What are the names and ids of every course with less than 2 sections?",
+    "query": "SELECT T1.course_name ,  T1.course_id FROM Courses AS T1 JOIN Sections AS T2 ON T1.course_id  =  T2.course_id GROUP BY T1.course_id HAVING count(*)  <=  2",
+    "db_id": "student_transcripts_tracking"
+  },
+  {
+    "question": "How many singers do we have?",
+    "query": "SELECT count(*) FROM singer",
+    "db_id": "concert_singer"
+  },
+  {
+    "question": "Give the flight numbers of flights landing at APG.",
+    "query": "SELECT FlightNo FROM FLIGHTS WHERE DestAirport  =  \"APG\"",
+    "db_id": "flight_2"
+  },
+  {
+    "question": "What are the population, name and leader of the country with the largest area?",
+    "query": "SELECT Name ,  population ,  HeadOfState FROM country ORDER BY SurfaceArea DESC LIMIT 1",
+    "db_id": "world_1"
+  },
+  {
+    "question": "Find the maximum weight for each type of pet. List the maximum weight and pet type.",
+    "query": "SELECT max(weight) ,  petType FROM pets GROUP BY petType",
+    "db_id": "pets_1"
+  },
+  {
+    "question": "How many United Airlines flights go to City 'Aberdeen'?",
+    "query": "SELECT count(*) FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.DestAirport  =  T2.AirportCode JOIN AIRLINES AS T3 ON T3.uid  =  T1.Airline WHERE T2.City  =  \"Aberdeen\" AND T3.Airline  =  \"United Airlines\"",
+    "db_id": "flight_2"
+  },
+  {
+    "question": "List each charge type and its amount.",
+    "query": "SELECT charge_type ,  charge_amount FROM Charges",
+    "db_id": "dog_kennels"
+  },
+  {
+    "question": "What are the names , themes , and number of singers for every concert ?",
+    "query": "select t2.concert_name ,  t2.theme ,  count(*) from singer_in_concert as t1 join concert as t2 on t1.concert_id  =  t2.concert_id group by t2.concert_id",
+    "db_id": "concert_singer"
+  },
+  {
+    "question": "What is the content of the series Sky Radio?",
+    "query": "SELECT Content FROM TV_Channel WHERE series_name = \"Sky Radio\";",
+    "db_id": "tvshow"
+  },
+  {
+    "question": "How much does the youngest dog weigh?",
+    "query": "SELECT weight FROM pets ORDER BY pet_age LIMIT 1",
+    "db_id": "pets_1"
+  },
+  {
+    "question": "What is the hometown of the youngest teacher?",
+    "query": "SELECT Hometown FROM teacher ORDER BY Age ASC LIMIT 1",
+    "db_id": "course_teach"
+  },
+  {
+    "question": "What are the first names of all players, and their average rankings?",
+    "query": "SELECT avg(ranking) ,  T1.first_name FROM players AS T1 JOIN rankings AS T2 ON T1.player_id  =  T2.player_id GROUP BY T1.first_name",
+    "db_id": "wta_1"
+  },
+  {
+    "question": "What are the age and hometown of teachers?",
+    "query": "SELECT Age ,  Hometown FROM teacher",
+    "db_id": "course_teach"
+  },
+  {
+    "question": "List the section_name in reversed lexicographical order.",
+    "query": "SELECT section_name FROM Sections ORDER BY section_name DESC",
+    "db_id": "student_transcripts_tracking"
+  },
+  {
+    "question": "What are the names of students who have no friends?",
+    "query": "SELECT name FROM Highschooler EXCEPT SELECT T2.name FROM Friend AS T1 JOIN Highschooler AS T2 ON T1.student_id  =  T2.id",
+    "db_id": "network_1"
+  },
+  {
+    "question": "List the contestant numbers and names, ordered by contestant name descending.",
+    "query": "SELECT contestant_number ,  contestant_name FROM contestants ORDER BY contestant_name DESC",
+    "db_id": "voter_1"
+  },
+  {
+    "question": "Show all template type codes that are not used by any document.",
+    "query": "SELECT template_type_code FROM Templates EXCEPT SELECT template_type_code FROM Templates AS T1 JOIN Documents AS T2 ON T1.template_id  =  T2.template_id",
+    "db_id": "cre_Doc_Template_Mgt"
+  },
+  {
+    "question": "Show all countries and the number of singers in each country.",
+    "query": "SELECT country ,  count(*) FROM singer GROUP BY country",
+    "db_id": "concert_singer"
+  },
+  {
+    "question": "Return the average earnings across all poker players.",
+    "query": "SELECT avg(Earnings) FROM poker_player",
+    "db_id": "poker_player"
+  },
+  {
+    "question": "What is the average miles per gallon of all the cards with 4 cylinders?",
+    "query": "SELECT avg(mpg) FROM CARS_DATA WHERE Cylinders  =  4;",
+    "db_id": "car_1"
+  },
+  {
+    "question": "How many high schoolers are in each grade?",
+    "query": "SELECT grade ,  count(*) FROM Highschooler GROUP BY grade",
+    "db_id": "network_1"
+  },
+  {
+    "question": "find id of the tv channels that from the countries where have more than two tv channels.",
+    "query": "SELECT id FROM tv_channel GROUP BY country HAVING count(*)  >  2",
+    "db_id": "tvshow"
+  },
+  {
+    "question": "What are the email, cell phone and home phone of each professional?",
+    "query": "SELECT email_address ,  cell_number ,  home_phone FROM professionals",
+    "db_id": "dog_kennels"
+  },
+  {
+    "question": "What is the average and maximum age for each pet type?",
+    "query": "SELECT avg(pet_age) ,  max(pet_age) ,  pettype FROM pets GROUP BY pettype",
+    "db_id": "pets_1"
+  },
+  {
+    "question": "How many distinct nationalities are there?",
+    "query": "SELECT count(DISTINCT Nationality) FROM people",
+    "db_id": "poker_player"
+  },
+  {
+    "question": "Count the number of documents that use the PPT template type.",
+    "query": "SELECT count(*) FROM Documents AS T1 JOIN Templates AS T2 ON T1.Template_ID  =  T2.Template_ID WHERE T2.Template_Type_Code  =  'PPT'",
+    "db_id": "cre_Doc_Template_Mgt"
+  },
+  {
+    "question": "What is the count of the car models produced in the United States?",
+    "query": "SELECT count(*) FROM MODEL_LIST AS T1 JOIN CAR_MAKERS AS T2 ON T1.Maker  =  T2.Id JOIN COUNTRIES AS T3 ON T2.Country  =  T3.CountryId WHERE T3.CountryName  =  'usa';",
+    "db_id": "car_1"
+  },
+  {
+    "question": "What are the codes of template types that have fewer than 3 templates?",
+    "query": "SELECT template_type_code FROM Templates GROUP BY template_type_code HAVING count(*)  <  3",
+    "db_id": "cre_Doc_Template_Mgt"
+  },
+  {
+    "question": "What are the ids of the TV channels that do not have any cartoons directed by Ben Jones?",
+    "query": "SELECT id FROM TV_Channel EXCEPT SELECT channel FROM cartoon WHERE directed_by  =  'Ben Jones'",
+    "db_id": "tvshow"
+  },
+  {
+    "question": "Find the name of airports which do not have any flight in and out.",
+    "query": "SELECT AirportName FROM Airports WHERE AirportCode NOT IN (SELECT SourceAirport FROM Flights UNION SELECT DestAirport FROM Flights)",
+    "db_id": "flight_2"
+  },
+  {
+    "question": "What is the code of airport that has fewest number of flights?",
+    "query": "SELECT T1.AirportCode FROM AIRPORTS AS T1 JOIN FLIGHTS AS T2 ON T1.AirportCode  =  T2.DestAirport OR T1.AirportCode  =  T2.SourceAirport GROUP BY T1.AirportCode ORDER BY count(*) LIMIT 1",
+    "db_id": "flight_2"
+  },
+  {
+    "question": "List all singer names in concerts in year 2014.",
+    "query": "SELECT T2.name FROM singer_in_concert AS T1 JOIN singer AS T2 ON T1.singer_id  =  T2.singer_id JOIN concert AS T3 ON T1.concert_id  =  T3.concert_id WHERE T3.year  =  2014",
+    "db_id": "concert_singer"
+  },
+  {
+    "question": "Please show the most common citizenship of singers.",
+    "query": "SELECT Citizenship FROM singer GROUP BY Citizenship ORDER BY COUNT(*) DESC LIMIT 1",
+    "db_id": "singer"
+  },
+  {
+    "question": "Find the number of distinct type of pets.",
+    "query": "SELECT count(DISTINCT pettype) FROM pets",
+    "db_id": "pets_1"
+  },
+  {
+    "question": "List the arrival date and the departure date for all the dogs.",
+    "query": "SELECT date_arrived ,  date_departed FROM Dogs",
+    "db_id": "dog_kennels"
+  },
+  {
+    "question": "List all airline names and their abbreviations in \"USA\".",
+    "query": "SELECT Airline ,  Abbreviation FROM AIRLINES WHERE Country  =  \"USA\"",
+    "db_id": "flight_2"
+  },
+  {
+    "question": "Give the airport code and airport name corresonding to the city Anthony.",
+    "query": "SELECT AirportCode ,  AirportName FROM AIRPORTS WHERE city  =  \"Anthony\"",
+    "db_id": "flight_2"
+  },
+  {
+    "question": "Which professionals have done at least two types of treatments? List the professional id and cell phone.",
+    "query": "SELECT T1.professional_id ,  T1.cell_number FROM Professionals AS T1 JOIN Treatments AS T2 ON T1.professional_id  =  T2.professional_id GROUP BY T1.professional_id HAVING count(*)  >=  2",
+    "db_id": "dog_kennels"
+  },
+  {
+    "question": "how many countries are in Asia?",
+    "query": "SELECT count(*) FROM country WHERE continent  =  \"Asia\"",
+    "db_id": "world_1"
+  },
+  {
+    "question": "How many matches were played in 2013 or 2016?",
+    "query": "SELECT count(*) FROM matches WHERE YEAR  =  2013 OR YEAR  =  2016",
+    "db_id": "wta_1"
+  },
+  {
+    "question": "Count the number of flights into ATO.",
+    "query": "SELECT count(*) FROM FLIGHTS WHERE DestAirport  =  \"ATO\"",
+    "db_id": "flight_2"
+  },
+  {
+    "question": "What are the names of poker players, ordered ascending by the number of final tables they have made?",
+    "query": "SELECT T1.Name FROM people AS T1 JOIN poker_player AS T2 ON T1.People_ID  =  T2.People_ID ORDER BY T2.Final_Table_Made",
+    "db_id": "poker_player"
+  },
+  {
+    "question": "For each hometown, how many teachers are there?",
+    "query": "SELECT Hometown ,  COUNT(*) FROM teacher GROUP BY Hometown",
+    "db_id": "course_teach"
+  },
+  {
+    "question": "Sort all the shops by number products in descending order, and return the name, location and district of each shop.",
+    "query": "SELECT name ,  LOCATION ,  district FROM shop ORDER BY number_products DESC",
+    "db_id": "employee_hire_evaluation"
+  },
+  {
+    "question": "What are the names of singers ordered by ascending net worth?",
+    "query": "SELECT Name FROM singer ORDER BY Net_Worth_Millions ASC",
+    "db_id": "singer"
+  },
+  {
+    "question": "Which template type code is used by most number of documents?",
+    "query": "SELECT T1.template_type_code FROM Templates AS T1 JOIN Documents AS T2 ON T1.template_id  =  T2.template_id GROUP BY T1.template_type_code ORDER BY count(*) DESC LIMIT 1",
+    "db_id": "cre_Doc_Template_Mgt"
+  },
+  {
+    "question": "Show the name of the teacher for the math course.",
+    "query": "SELECT T3.Name FROM course_arrange AS T1 JOIN course AS T2 ON T1.Course_ID  =  T2.Course_ID JOIN teacher AS T3 ON T1.Teacher_ID  =  T3.Teacher_ID WHERE T2.Course  =  \"Math\"",
+    "db_id": "course_teach"
+  },
+  {
+    "question": "How many flights land in Aberdeen or Abilene?",
+    "query": "SELECT count(*) FROM Flights AS T1 JOIN Airports AS T2 ON T1.DestAirport  =  T2.AirportCode WHERE T2.city  =  \"Aberdeen\" OR T2.city  =  \"Abilene\"",
+    "db_id": "flight_2"
+  },
+  {
+    "question": "How many flights does airline 'JetBlue Airways' have?",
+    "query": "SELECT count(*) FROM FLIGHTS AS T1 JOIN AIRLINES AS T2 ON T1.Airline  =  T2.uid WHERE T2.Airline = \"JetBlue Airways\"",
+    "db_id": "flight_2"
+  },
+  {
+    "question": "What are the names of countries that speak more than 2 languages, as well as how many languages they speak?",
+    "query": "SELECT COUNT(T2.Language) ,  T1.Name FROM country AS T1 JOIN countrylanguage AS T2 ON T1.Code  =  T2.CountryCode GROUP BY T1.Name HAVING COUNT(*)  >  2",
+    "db_id": "world_1"
+  },
+  {
+    "question": "For each language, list the number of TV Channels that use it.",
+    "query": "SELECT LANGUAGE ,  count(*) FROM TV_Channel GROUP BY LANGUAGE",
+    "db_id": "tvshow"
+  },
+  {
+    "question": "What is the model for the car with a weight smaller than the average?",
+    "query": "SELECT T1.model FROM CAR_NAMES AS T1 JOIN CARS_DATA AS T2 ON T1.MakeId  =  T2.Id WHERE T2.Weight  <  (SELECT avg(Weight) FROM CARS_DATA)",
+    "db_id": "car_1"
+  },
+  {
+    "question": "What is the description of the treatment type that costs the least money in total?",
+    "query": "SELECT T1.treatment_type_description FROM Treatment_types AS T1 JOIN Treatments AS T2 ON T1.treatment_type_code  =  T2.treatment_type_code GROUP BY T1.treatment_type_code ORDER BY sum(cost_of_treatment) ASC LIMIT 1",
+    "db_id": "dog_kennels"
+  },
+  {
+    "question": "Show names of all high school students who do not have any friends.",
+    "query": "SELECT name FROM Highschooler EXCEPT SELECT T2.name FROM Friend AS T1 JOIN Highschooler AS T2 ON T1.student_id  =  T2.id",
+    "db_id": "network_1"
+  },
+  {
+    "question": "How much does the car accelerate that makes amc hornet sportabout (sw)?",
+    "query": "SELECT T1.Accelerate FROM CARS_DATA AS T1 JOIN CAR_NAMES AS T2 ON T1.Id  =  T2.MakeId WHERE T2.Make  =  'amc hornet sportabout (sw)';",
+    "db_id": "car_1"
+  },
+  {
+    "question": "What are the emails of the professionals living in either the state of Hawaii or the state of Wisconsin?",
+    "query": "SELECT email_address FROM Professionals WHERE state  =  'Hawaii' OR state  =  'Wisconsin'",
+    "db_id": "dog_kennels"
+  },
+  {
+    "question": "What are the arriving date and the departing date of all the dogs?",
+    "query": "SELECT date_arrived ,  date_departed FROM Dogs",
+    "db_id": "dog_kennels"
+  },
+  {
+    "question": "How many dogs went through any treatments?",
+    "query": "SELECT count(DISTINCT dog_id) FROM Treatments",
+    "db_id": "dog_kennels"
+  },
+  {
+    "question": "What is the area code in which the most voters voted?",
+    "query": "SELECT T1.area_code FROM area_code_state AS T1 JOIN votes AS T2 ON T1.state  =  T2.state GROUP BY T1.area_code ORDER BY count(*) DESC LIMIT 1",
+    "db_id": "voter_1"
+  },
+  {
+    "question": "What are the different models for the cards produced after 1980?",
+    "query": "SELECT DISTINCT T1.model FROM MODEL_LIST AS T1 JOIN CAR_NAMES AS T2 ON T1.model  =  T2.model JOIN CARS_DATA AS T3 ON T2.MakeId  =  T3.id WHERE T3.year  >  1980;",
+    "db_id": "car_1"
+  },
+  {
+    "question": "What are the names of the singers whose birth years are either 1948 or 1949?",
+    "query": "SELECT Name FROM singer WHERE Birth_Year  =  1948 OR Birth_Year  =  1949",
+    "db_id": "singer"
+  },
+  {
+    "question": "Show all template ids and number of documents using each template.",
+    "query": "SELECT template_id ,  count(*) FROM Documents GROUP BY template_id",
+    "db_id": "cre_Doc_Template_Mgt"
+  },
+  {
+    "question": "Show the names of all high schoolers in grade 10.",
+    "query": "SELECT name FROM Highschooler WHERE grade  =  10",
+    "db_id": "network_1"
+  },
+  {
+    "question": "What is the name of the conductor who has conducted the most orchestras?",
+    "query": "SELECT T1.Name FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID  =  T2.Conductor_ID GROUP BY T2.Conductor_ID ORDER BY COUNT(*) DESC LIMIT 1",
+    "db_id": "orchestra"
+  },
+  {
+    "question": "Which shops' number products is above the average? Give me the shop names.",
+    "query": "SELECT name FROM shop WHERE number_products  >  (SELECT avg(number_products) FROM shop)",
+    "db_id": "employee_hire_evaluation"
+  },
+  {
+    "question": "Which grade has the most high schoolers?",
+    "query": "SELECT grade FROM Highschooler GROUP BY grade ORDER BY count(*) DESC LIMIT 1",
+    "db_id": "network_1"
+  },
+  {
+    "question": "For each shop, return the number of employees working there and the name of the shop.",
+    "query": "SELECT count(*) ,  t2.name FROM hiring AS t1 JOIN shop AS t2 ON t1.shop_id  =  t2.shop_id GROUP BY t2.name",
+    "db_id": "employee_hire_evaluation"
+  },
+  {
+    "question": "What is the name of the different car makers who produced a car in 1970?",
+    "query": "SELECT DISTINCT T1.Maker FROM CAR_MAKERS AS T1 JOIN MODEL_LIST AS T2 ON T1.Id  =  T2.Maker JOIN CAR_NAMES AS T3 ON T2.model  =  T3.model JOIN CARS_DATA AS T4 ON T3.MakeId  =  T4.id WHERE T4.year  =  '1970';",
+    "db_id": "car_1"
+  },
+  {
+    "question": "How many TV Channels use the English language?",
+    "query": "SELECT count(*) FROM TV_Channel WHERE LANGUAGE = \"English\";",
+    "db_id": "tvshow"
+  },
+  {
+    "question": "What are all different template ids used for documents, and how many times were each of them used?",
+    "query": "SELECT template_id ,  count(*) FROM Documents GROUP BY template_id",
+    "db_id": "cre_Doc_Template_Mgt"
+  },
+  {
+    "question": "What are the different continents and the total popuation and average life expectancy corresponding to each, for continents that have an average life expectancy less than 72?",
+    "query": "SELECT sum(Population) ,  avg(LifeExpectancy) ,  Continent FROM country GROUP BY Continent HAVING avg(LifeExpectancy)  <  72",
+    "db_id": "world_1"
+  },
+  {
+    "question": "What is the mobile phone number of the student named Timmothy Ward ?",
+    "query": "select cell_mobile_number from students where first_name  =  'timmothy' and last_name  =  'ward'",
+    "db_id": "student_transcripts_tracking"
+  },
+  {
+    "question": "Which unique cities are in Asian countries where Chinese is the official language ?",
+    "query": "select distinct t3.name from country as t1 join countrylanguage as t2 on t1.code  =  t2.countrycode join city as t3 on t1.code  =  t3.countrycode where t2.isofficial  =  't' and t2.language  =  'chinese' and t1.continent  =  \"asia\"",
+    "db_id": "world_1"
+  },
+  {
+    "question": "Find the name and age of the visitor who bought the most tickets at once.",
+    "query": "SELECT t1.name ,  t1.age FROM visitor AS t1 JOIN visit AS t2 ON t1.id  =  t2.visitor_id ORDER BY t2.num_of_ticket DESC LIMIT 1",
+    "db_id": "museum_visit"
+  },
+  {
+    "question": "Give the total surface area covered by countries in Asia or Europe.",
+    "query": "SELECT sum(SurfaceArea) FROM country WHERE Continent  =  \"Asia\" OR Continent  =  \"Europe\"",
+    "db_id": "world_1"
+  },
+  {
+    "question": "What are the countries that have greater surface area than any country in Europe?",
+    "query": "SELECT Name FROM country WHERE SurfaceArea  >  (SELECT min(SurfaceArea) FROM country WHERE Continent  =  \"Europe\")",
+    "db_id": "world_1"
+  },
+  {
+    "question": "What is the total population of Gelderland district?",
+    "query": "SELECT sum(Population) FROM city WHERE District  =  \"Gelderland\"",
+    "db_id": "world_1"
+  },
+  {
+    "question": "What are the names of all high schoolers in grade 10?",
+    "query": "SELECT name FROM Highschooler WHERE grade  =  10",
+    "db_id": "network_1"
+  },
+  {
+    "question": "Which flight numbers correspond to United Airlines flights?",
+    "query": "SELECT T1.FlightNo FROM FLIGHTS AS T1 JOIN AIRLINES AS T2 ON T2.uid  =  T1.Airline WHERE T2.Airline  =  \"United Airlines\"",
+    "db_id": "flight_2"
+  },
+  {
+    "question": "How many cities in each district have a population that is above the average population across all cities?",
+    "query": "SELECT count(*) ,  District FROM city WHERE Population  >  (SELECT avg(Population) FROM city) GROUP BY District",
+    "db_id": "world_1"
+  },
+  {
+    "question": "What are the names of documents that use templates with the code BK?",
+    "query": "SELECT T2.document_name FROM Templates AS T1 JOIN Documents AS T2 ON T1.template_id  =  T2.template_id WHERE T1.template_type_code  =  \"BK\"",
+    "db_id": "cre_Doc_Template_Mgt"
+  },
+  {
+    "question": "What is the first name and country code of the oldest player?",
+    "query": "SELECT first_name ,  country_code FROM players ORDER BY birth_date LIMIT 1",
+    "db_id": "wta_1"
+  },
+  {
+    "question": "What are the names and birth dates of people, ordered by their names in alphabetical order?",
+    "query": "SELECT Name ,  Birth_Date FROM people ORDER BY Name ASC",
+    "db_id": "poker_player"
+  },
+  {
+    "question": "Find the minimum grade of students who have no friends.",
+    "query": "SELECT min(grade) FROM Highschooler WHERE id NOT IN (SELECT T1.student_id FROM Friend AS T1 JOIN Highschooler AS T2 ON T1.student_id  =  T2.id)",
+    "db_id": "network_1"
+  },
+  {
+    "question": "How many people live in Asia, and what is the largest GNP among them?",
+    "query": "SELECT sum(Population) ,  max(GNP) FROM country WHERE Continent  =  \"Asia\"",
+    "db_id": "world_1"
+  },
+  {
+    "question": "How many different forms of governments are there in Africa?",
+    "query": "SELECT count(DISTINCT GovernmentForm) FROM country WHERE Continent  =  \"Africa\"",
+    "db_id": "world_1"
+  },
+  {
+    "question": "What is the series name and country of all TV channels that are playing cartoons directed by Ben Jones and cartoons directed by Michael Chang?",
+    "query": "SELECT T1.series_name ,  T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by  =  'Michael Chang' INTERSECT SELECT T1.series_name ,  T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by  =  'Ben Jones'",
+    "db_id": "tvshow"
+  },
+  {
+    "question": "What is maximum and minimum death toll caused each time?",
+    "query": "SELECT max(killed) ,  min(killed) FROM death",
+    "db_id": "battle_death"
+  },
+  {
+    "question": "What are the names of students who have 2 or more likes?",
+    "query": "SELECT T2.name FROM Likes AS T1 JOIN Highschooler AS T2 ON T1.student_id  =  T2.id GROUP BY T1.student_id HAVING count(*)  >=  2",
+    "db_id": "network_1"
+  },
+  {
+    "question": "What is the program id and the summary of the degree that has the most students enrolled?",
+    "query": "SELECT T1.degree_program_id ,  T1.degree_summary_name FROM Degree_Programs AS T1 JOIN Student_Enrolment AS T2 ON T1.degree_program_id  =  T2.degree_program_id GROUP BY T1.degree_program_id ORDER BY count(*) DESC LIMIT 1",
+    "db_id": "student_transcripts_tracking"
+  },
+  {
+    "question": "find the pixel aspect ratio and nation of the tv channels that do not use English.",
+    "query": "SELECT Pixel_aspect_ratio_PAR ,  country FROM tv_channel WHERE LANGUAGE != 'English'",
+    "db_id": "tvshow"
+  },
+  {
+    "question": "What are the ids of students who both have friends and are liked?",
+    "query": "SELECT student_id FROM Friend INTERSECT SELECT liked_id FROM Likes",
+    "db_id": "network_1"
+  },
+  {
+    "question": "Return the country codes for countries that do not speak English.",
+    "query": "SELECT CountryCode FROM countrylanguage EXCEPT SELECT CountryCode FROM countrylanguage WHERE LANGUAGE  =  \"English\"",
+    "db_id": "world_1"
+  },
+  {
+    "question": "List the names of poker players ordered by the final tables made in ascending order.",
+    "query": "SELECT T1.Name FROM people AS T1 JOIN poker_player AS T2 ON T1.People_ID  =  T2.People_ID ORDER BY T2.Final_Table_Made",
+    "db_id": "poker_player"
+  },
+  {
+    "question": "Which language is the most popular on the Asian continent?",
+    "query": "SELECT T2.Language FROM country AS T1 JOIN countrylanguage AS T2 ON T1.Code  =  T2.CountryCode WHERE T1.Continent  =  \"Asia\" GROUP BY T2.Language ORDER BY COUNT (*) DESC LIMIT 1",
+    "db_id": "world_1"
+  },
+  {
+    "question": "What is the average expected life expectancy for countries in the region of Central Africa?",
+    "query": "SELECT avg(LifeExpectancy) FROM country WHERE Region  =  \"Central Africa\"",
+    "db_id": "world_1"
+  },
+  {
+    "question": "Show all template type codes and the number of documents using each type.",
+    "query": "SELECT T1.template_type_code ,  count(*) FROM Templates AS T1 JOIN Documents AS T2 ON T1.template_id  =  T2.template_id GROUP BY T1.template_type_code",
+    "db_id": "cre_Doc_Template_Mgt"
+  },
+  {
+    "question": "Find the average life expectancy and total population for each continent where the average life expectancy is shorter than 72?",
+    "query": "SELECT sum(Population) ,  avg(LifeExpectancy) ,  Continent FROM country GROUP BY Continent HAVING avg(LifeExpectancy)  <  72",
+    "db_id": "world_1"
+  },
+  {
+    "question": "Which year has most number of concerts?",
+    "query": "SELECT YEAR FROM concert GROUP BY YEAR ORDER BY count(*) DESC LIMIT 1",
+    "db_id": "concert_singer"
+  },
+  {
+    "question": "What are the makers and models?",
+    "query": "SELECT Maker ,  Model FROM MODEL_LIST;",
+    "db_id": "car_1"
+  },
+  {
+    "question": "What is the official language used in the country the name of whose head of state is Beatrix.",
+    "query": "SELECT T2.Language FROM country AS T1 JOIN countrylanguage AS T2 ON T1.Code  =  T2.CountryCode WHERE T1.HeadOfState  =  \"Beatrix\" AND T2.IsOfficial  =  \"T\"",
+    "db_id": "world_1"
+  },
+  {
+    "question": "Which model has the most version(make) of cars?",
+    "query": "SELECT Model FROM CAR_NAMES GROUP BY Model ORDER BY count(*) DESC LIMIT 1;",
+    "db_id": "car_1"
+  },
+  {
+    "question": "What is Weekly Rank of TV series with Episode \"A Love of a Lifetime\"?",
+    "query": "SELECT Weekly_Rank FROM TV_series WHERE Episode = \"A Love of a Lifetime\";",
+    "db_id": "tvshow"
+  },
+  {
+    "question": "What are all the course names of the courses which ever have students enrolled in?",
+    "query": "SELECT DISTINCT T1.course_name FROM Courses AS T1 JOIN Student_Enrolment_Courses AS T2 ON T1.course_id  =  T2.course_id",
+    "db_id": "student_transcripts_tracking"
+  },
+  {
+    "question": "How many pets are owned by students that have an age greater than 20?",
+    "query": "SELECT count(*) FROM student AS T1 JOIN has_pet AS T2 ON T1.stuid  =  T2.stuid WHERE T1.age  >  20",
+    "db_id": "pets_1"
+  },
+  {
+    "question": "For a volvo model, how many cylinders does the version with least accelerate have?",
+    "query": "SELECT T1.cylinders FROM CARS_DATA AS T1 JOIN CAR_NAMES AS T2 ON T1.Id  =  T2.MakeId WHERE T2.Model  =  'volvo' ORDER BY T1.accelerate ASC LIMIT 1;",
+    "db_id": "car_1"
+  },
+  {
+    "question": "What are the countries that are not playing cartoons written by Todd Casey?",
+    "query": "SELECT country FROM TV_Channel EXCEPT SELECT T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.written_by  =  'Todd Casey'",
+    "db_id": "tvshow"
+  },
+  {
+    "question": "Find the id and weight of all pets whose age is older than 1.",
+    "query": "SELECT petid ,  weight FROM pets WHERE pet_age  >  1",
+    "db_id": "pets_1"
+  },
+  {
+    "question": "What are the first names and country codes for players who won both the WTA Championships and the Australian Open?",
+    "query": "SELECT T1.country_code ,  T1.first_name FROM players AS T1 JOIN matches AS T2 ON T1.player_id  =  T2.winner_id WHERE T2.tourney_name  =  'WTA Championships' INTERSECT SELECT T1.country_code ,  T1.first_name FROM players AS T1 JOIN matches AS T2 ON T1.player_id  =  T2.winner_id WHERE T2.tourney_name  =  'Australian Open'",
+    "db_id": "wta_1"
+  },
+  {
+    "question": "Show all paragraph texts for the document \"Customer reviews\".",
+    "query": "SELECT T1.paragraph_text FROM Paragraphs AS T1 JOIN Documents AS T2 ON T1.document_id  =  T2.document_id WHERE T2.document_name  =  \"Customer reviews\"",
+    "db_id": "cre_Doc_Template_Mgt"
+  },
+  {
+    "question": "What are the contestant numbers and names of the contestants who had at least two votes?",
+    "query": "SELECT T1.contestant_number , T1.contestant_name FROM contestants AS T1 JOIN votes AS T2 ON T1.contestant_number  =  T2.contestant_number GROUP BY T1.contestant_number HAVING count(*)  >=  2",
+    "db_id": "voter_1"
+  },
+  {
+    "question": "List the name of teachers whose hometown is not `` Little Lever Urban District '' .",
+    "query": "select name from teacher where hometown != \"little lever urban district\"",
+    "db_id": "course_teach"
+  },
+  {
+    "question": "How many dog pets are raised by female students?",
+    "query": "SELECT count(*) FROM student AS T1 JOIN has_pet AS T2 ON T1.stuid  =  T2.stuid JOIN pets AS T3 ON T2.petid  =  T3.petid WHERE T1.sex  =  'F' AND T3.pettype  =  'dog'",
+    "db_id": "pets_1"
+  },
+  {
+    "question": "What is the semester which most student registered in? Show both the name and the id.",
+    "query": "SELECT T1.semester_name ,  T1.semester_id FROM Semesters AS T1 JOIN Student_Enrolment AS T2 ON T1.semester_id  =  T2.semester_id GROUP BY T1.semester_id ORDER BY count(*) DESC LIMIT 1",
+    "db_id": "student_transcripts_tracking"
+  },
+  {
+    "question": "What are the names and areas of countries with the top 5 largest area?",
+    "query": "SELECT Name ,  SurfaceArea FROM country ORDER BY SurfaceArea DESC LIMIT 5",
+    "db_id": "world_1"
+  },
+  {
+    "question": "How many documents are using the template with type code 'PPT'?",
+    "query": "SELECT count(*) FROM Documents AS T1 JOIN Templates AS T2 ON T1.Template_ID  =  T2.Template_ID WHERE T2.Template_Type_Code  =  'PPT'",
+    "db_id": "cre_Doc_Template_Mgt"
+  },
+  {
+    "question": "How much does the most recent treatment cost?",
+    "query": "SELECT cost_of_treatment FROM Treatments ORDER BY date_of_treatment DESC LIMIT 1",
+    "db_id": "dog_kennels"
+  },
+  {
+    "question": "What is the average and maximum capacities for all stadiums ?",
+    "query": "select avg(capacity) ,  max(capacity) from stadium",
+    "db_id": "concert_singer"
+  },
+  {
+    "question": "How many airlines do we have?",
+    "query": "SELECT count(*) FROM AIRLINES",
+    "db_id": "flight_2"
+  },
+  {
+    "question": "What are the names of high schoolers who have 3 or more friends?",
+    "query": "SELECT T2.name FROM Friend AS T1 JOIN Highschooler AS T2 ON T1.student_id  =  T2.id GROUP BY T1.student_id HAVING count(*)  >=  3",
+    "db_id": "network_1"
+  },
+  {
+    "question": "Find the total ranking points for each player and their first name.",
+    "query": "SELECT sum(ranking_points) ,  T1.first_name FROM players AS T1 JOIN rankings AS T2 ON T1.player_id  =  T2.player_id GROUP BY T1.first_name",
+    "db_id": "wta_1"
+  },
+  {
+    "question": "Show the stadium names without any concert.",
+    "query": "SELECT name FROM stadium WHERE stadium_id NOT IN (SELECT stadium_id FROM concert)",
+    "db_id": "concert_singer"
+  },
+  {
+    "question": "How many countries are listed?",
+    "query": "SELECT count(*) FROM COUNTRIES;",
+    "db_id": "car_1"
+  },
+  {
+    "question": "For students who have pets , how many pets does each student have ? list their ids instead of names .",
+    "query": "select count(*) ,  t1.stuid from student as t1 join has_pet as t2 on t1.stuid  =  t2.stuid group by t1.stuid",
+    "db_id": "pets_1"
+  },
+  {
+    "question": "What are the names of conductors who have conducted orchestras founded after the year 2008?",
+    "query": "SELECT T1.Name FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID  =  T2.Conductor_ID WHERE Year_of_Founded  >  2008",
+    "db_id": "orchestra"
+  },
+  {
+    "question": "What is the average attendance of shows?",
+    "query": "SELECT avg(Attendance) FROM SHOW",
+    "db_id": "orchestra"
+  },
+  {
+    "question": "What is the name of the visitor who visited both a museum opened before 2009 and a museum opened after 2011?",
+    "query": "SELECT t1.name FROM visitor AS t1 JOIN visit AS t2 ON t1.id  =  t2.visitor_id JOIN museum AS t3 ON t3.Museum_ID  =  t2.Museum_ID WHERE t3.open_year  <  2009 INTERSECT SELECT t1.name FROM visitor AS t1 JOIN visit AS t2 ON t1.id  =  t2.visitor_id JOIN museum AS t3 ON t3.Museum_ID  =  t2.Museum_ID WHERE t3.open_year  >  2011",
+    "db_id": "museum_visit"
+  },
+  {
+    "question": "What is the record company used by the greatest number of orchestras?",
+    "query": "SELECT Record_Company FROM orchestra GROUP BY Record_Company ORDER BY COUNT(*) DESC LIMIT 1",
+    "db_id": "orchestra"
+  },
+  {
+    "question": "What is the total number of unique official languages spoken in the countries that are founded before 1930?",
+    "query": "SELECT count(DISTINCT T2.Language) FROM country AS T1 JOIN countrylanguage AS T2 ON T1.Code  =  T2.CountryCode WHERE  IndepYear  <  1930 AND T2.IsOfficial  =  \"T\"",
+    "db_id": "world_1"
+  },
+  {
+    "question": "Show location and name for all stadiums with a capacity between 5000 and 10000.",
+    "query": "SELECT LOCATION ,  name FROM stadium WHERE capacity BETWEEN 5000 AND 10000",
+    "db_id": "concert_singer"
+  },
+  {
+    "question": "What is the document id with 1 to 2 paragraphs?",
+    "query": "SELECT document_id FROM Paragraphs GROUP BY document_id HAVING count(*) BETWEEN 1 AND 2",
+    "db_id": "cre_Doc_Template_Mgt"
+  },
+  {
+    "question": "Count the number of orchestras that have CD or DVD as their record format.",
+    "query": "SELECT COUNT(*) FROM orchestra WHERE Major_Record_Format  =  \"CD\" OR Major_Record_Format  =  \"DVD\"",
+    "db_id": "orchestra"
+  },
+  {
+    "question": "Find the name, population and expected life length of asian country with the largest area?",
+    "query": "SELECT Name ,  Population ,  LifeExpectancy FROM country WHERE Continent  =  \"Asia\" ORDER BY SurfaceArea DESC LIMIT 1",
+    "db_id": "world_1"
+  },
+  {
+    "question": "What are each owner's first name and their dogs's name?",
+    "query": "SELECT T1.first_name ,  T2.name FROM Owners AS T1 JOIN Dogs AS T2 ON T1.owner_id  =  T2.owner_id",
+    "db_id": "dog_kennels"
+  },
+  {
+    "question": "Give the nationality that is most common across all people.",
+    "query": "SELECT Nationality FROM people GROUP BY Nationality ORDER BY COUNT(*) DESC LIMIT 1",
+    "db_id": "poker_player"
+  },
+  {
+    "question": "What is the name of the course with the most students enrolled?",
+    "query": "SELECT  T1.course_name FROM Courses AS T1 JOIN Student_Enrolment_Courses AS T2 ON T1.course_id  =  T2.course_id GROUP BY T1.course_name ORDER BY count(*) DESC LIMIT 1",
+    "db_id": "student_transcripts_tracking"
+  },
+  {
+    "question": "what are all the addresses including line 1 and line 2?",
+    "query": "SELECT line_1 ,  line_2 FROM addresses",
+    "db_id": "student_transcripts_tracking"
+  },
+  {
+    "question": "Show the name of teachers aged either 32 or 33?",
+    "query": "SELECT Name FROM teacher WHERE Age  =  32 OR Age  =  33",
+    "db_id": "course_teach"
+  },
+  {
+    "question": "Find the first name of the students who permanently live in the country Haiti or have the cell phone number 09700166582 .",
+    "query": "select t1.first_name from students as t1 join addresses as t2 on t1.permanent_address_id  =  t2.address_id where t2.country  =  'haiti' or t1.cell_mobile_number  =  '09700166582'",
+    "db_id": "student_transcripts_tracking"
+  },
+  {
+    "question": "Which first names are used for professionals or owners but are not used as dog names?",
+    "query": "SELECT first_name FROM Professionals UNION SELECT first_name FROM Owners EXCEPT SELECT name FROM Dogs",
+    "db_id": "dog_kennels"
+  },
+  {
+    "question": "What are the names of people who are not from Russia?",
+    "query": "SELECT Name FROM people WHERE Nationality != \"Russia\"",
+    "db_id": "poker_player"
+  },
+  {
+    "question": "What is the language spoken by the largest percentage of people in each country?",
+    "query": "SELECT LANGUAGE ,  CountryCode ,  max(Percentage) FROM countrylanguage GROUP BY CountryCode",
+    "db_id": "world_1"
+  },
+  {
+    "question": "Find the manager name and district of the shop whose number of products is the largest.",
+    "query": "SELECT manager_name ,  district FROM shop ORDER BY number_products DESC LIMIT 1",
+    "db_id": "employee_hire_evaluation"
+  },
+  {
+    "question": "Which owner owns the most dogs? List the owner id, first name and last name.",
+    "query": "SELECT T1.owner_id ,  T2.first_name ,  T2.last_name FROM Dogs AS T1 JOIN Owners AS T2 ON T1.owner_id  =  T2.owner_id GROUP BY T1.owner_id ORDER BY count(*) DESC LIMIT 1",
+    "db_id": "dog_kennels"
+  },
+  {
+    "question": "For each citizenship, how many singers are from that country?",
+    "query": "SELECT Citizenship ,  COUNT(*) FROM singer GROUP BY Citizenship",
+    "db_id": "singer"
+  },
+  {
+    "question": "List the first and last name of all players who are left / L hand in the order of birth date.",
+    "query": "SELECT first_name ,  last_name FROM players WHERE hand  =  'L' ORDER BY birth_date",
+    "db_id": "wta_1"
+  },
+  {
+    "question": "What airline serves the most flights?",
+    "query": "SELECT T1.Airline FROM AIRLINES AS T1 JOIN FLIGHTS AS T2 ON T1.uid  =  T2.Airline GROUP BY T1.Airline ORDER BY count(*) DESC LIMIT 1",
+    "db_id": "flight_2"
+  },
+  {
+    "question": "What are the name of the countries where there is not a single car maker?",
+    "query": "SELECT CountryName FROM countries EXCEPT SELECT T1.CountryName FROM countries AS T1 JOIN CAR_MAKERS AS T2 ON T1.countryId  =  T2.Country;",
+    "db_id": "car_1"
+  },
+  {
+    "question": "Which distinctive models are produced by maker with the full name General Motors or weighing more than 3500?",
+    "query": "SELECT DISTINCT T2.Model FROM CAR_NAMES AS T1 JOIN MODEL_LIST AS T2 ON T1.Model  =  T2.Model JOIN CAR_MAKERS AS T3 ON T2.Maker  =  T3.Id JOIN CARS_DATA AS T4 ON T1.MakeId  =  T4.Id WHERE T3.FullName  =  'General Motors' OR T4.weight  >  3500;",
+    "db_id": "car_1"
+  },
+  {
+    "question": "How many different loser names are there?",
+    "query": "SELECT count(DISTINCT loser_name) FROM matches",
+    "db_id": "wta_1"
+  },
+  {
+    "question": "What is the number of makers of care in France?",
+    "query": "SELECT count(*) FROM CAR_MAKERS AS T1 JOIN COUNTRIES AS T2 ON T1.Country  =  T2.CountryId WHERE T2.CountryName  =  'france';",
+    "db_id": "car_1"
+  },
+  {
+    "question": "What is the number of cartoones written by Joseph Kuhr?",
+    "query": "SELECT count(*) FROM Cartoon WHERE Written_by = \"Joseph Kuhr\";",
+    "db_id": "tvshow"
+  },
+  {
+    "question": "For the countries founded before 1930, what is the total number of distinct official languages?",
+    "query": "SELECT count(DISTINCT T2.Language) FROM country AS T1 JOIN countrylanguage AS T2 ON T1.Code  =  T2.CountryCode WHERE  IndepYear  <  1930 AND T2.IsOfficial  =  \"T\"",
+    "db_id": "world_1"
+  },
+  {
+    "question": "What is the number of carsw ith over 6 cylinders?",
+    "query": "SELECT COUNT(*) FROM CARS_DATA WHERE Cylinders  >  6;",
+    "db_id": "car_1"
+  },
+  {
+    "question": "How many ships ended up being 'Captured'?",
+    "query": "SELECT count(*) FROM ship WHERE disposition_of_ship  =  'Captured'",
+    "db_id": "battle_death"
+  },
+  {
+    "question": "What are the date and the operating professional's first name of each treatment?",
+    "query": "SELECT T1.date_of_treatment ,  T2.first_name FROM Treatments AS T1 JOIN Professionals AS T2 ON T1.professional_id  =  T2.professional_id",
+    "db_id": "dog_kennels"
+  },
+  {
+    "question": "List the first name and birth date of all players from the country with code USA.",
+    "query": "SELECT first_name ,  birth_date FROM players WHERE country_code  =  'USA'",
+    "db_id": "wta_1"
+  },
+  {
+    "question": "Which professional did not operate any treatment on dogs? List the professional's id, role and email.",
+    "query": "SELECT professional_id ,  role_code ,  email_address FROM Professionals EXCEPT SELECT T1.professional_id ,  T1.role_code ,  T1.email_address FROM Professionals AS T1 JOIN Treatments AS T2 ON T1.professional_id  =  T2.professional_id",
+    "db_id": "dog_kennels"
+  },
+  {
+    "question": "Describe the section h.",
+    "query": "SELECT section_description FROM Sections WHERE section_name  =  'h'",
+    "db_id": "student_transcripts_tracking"
+  },
+  {
+    "question": "What is the name and directors of all the cartoons that are ordered by air date?",
+    "query": "SELECT title ,  Directed_by FROM Cartoon ORDER BY Original_air_date",
+    "db_id": "tvshow"
+  },
+  {
+    "question": "How many car models are produced in the usa?",
+    "query": "SELECT count(*) FROM MODEL_LIST AS T1 JOIN CAR_MAKERS AS T2 ON T1.Maker  =  T2.Id JOIN COUNTRIES AS T3 ON T2.Country  =  T3.CountryId WHERE T3.CountryName  =  'usa';",
+    "db_id": "car_1"
+  }
+]
