@@ -57,13 +57,18 @@ uv run python eval/download_data.py     # Chinook demo DB + Spider benchmark
 uv run streamlit run app.py             # chat UI at http://localhost:8501
 ```
 
-Reproduce the benchmark:
+Reproduce the benchmark (the 76.0% in the table above):
 
 ```bash
-uv run python eval/make_subset.py                                # build the fixed subset
-uv run python eval/run_eval.py --model qwen2.5-coder:3b --sc 3   # run + log to MLflow
-uv run mlflow ui                                                 # view results
+uv run python eval/make_subset.py                          # build the fixed subset
+uv run python eval/run_eval.py --model qwen2.5-coder:3b    # run + log to MLflow
+uv run mlflow ui                                           # view results
 ```
+
+Add `--sc 3` to enable self-consistency: the agent samples 3 candidate queries
+per question, runs all three, and takes the majority result. Higher accuracy
+(~76–78%), ~3x the latency, and not reproducible run to run — it samples with
+randomness, so the exact figure varies.
 
 ## Structure
 
