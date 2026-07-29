@@ -12,7 +12,7 @@ mlruns/
 mlflow.db
 eval/results/
 
-# private development log & summary (local only, not for GitHub)
+# private notes
 notes-text2sql/
 
 # OS noise
