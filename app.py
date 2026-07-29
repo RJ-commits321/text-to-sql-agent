@@ -13,7 +13,17 @@ from text2sql.prompts import PROMPT_VERSION
 from text2sql.runlog import log_query, read_log
 from text2sql.schema import get_schema, list_tables, table_overview
 
-st.set_page_config(page_title="Text-to-SQL Agent", page_icon="🗃️", layout="wide")
+st.set_page_config(page_title="Text-to-SQL Agent", page_icon="🗃️")
+
+# Modest spacing tweaks: clear the top toolbar, keep a comfortable gap between blocks.
+# (Default centered layout keeps the content and the chat input the same width.)
+st.markdown(
+    "<style>"
+    ".block-container{padding-top:3.5rem;}"
+    "div[data-testid='stVerticalBlock']{gap:0.9rem;}"
+    "</style>",
+    unsafe_allow_html=True,
+)
 
 cfg = load_config()
 
@@ -37,12 +47,12 @@ def cached_overview(db_path: str) -> list[dict]:
 
 with st.sidebar:
     st.title("🗃️ Text-to-SQL Agent")
-    st.caption("Ask a database questions in plain English — a local LLM writes and runs the SQL.")
+    st.caption("Ask a database questions in plain English; an LLM writes and runs the SQL.")
     page = st.radio("Page", ["Chat", "Stats"], label_visibility="collapsed")
     model = st.selectbox("Model", cfg["llm"]["available_models"])
     st.caption(
-        f"prompt {PROMPT_VERSION} · retries ≤{cfg['agent']['max_attempts']} · "
-        "answers take ~5–15 s (local model)"
+        f"prompt {PROMPT_VERSION} · retries up to {cfg['agent']['max_attempts']} · "
+        "answers take ~5-15 s"
     )
 
 db_path = cfg["paths"]["demo_db"]
@@ -90,12 +100,12 @@ def handle_question(question: str):
             tables = ", ".join(list_tables(db_path))
             answer = (
                 "That's outside what this database knows. "
-                f"It only contains music-store data — tables: {tables}."
+                f"It only contains music-store data. Tables: {tables}."
             )
         else:
             answer = (
-                "I couldn't produce a working query for that question — "
-                "try rephrasing it or being more specific."
+                "I couldn't produce a working query for that question. "
+                "Try rephrasing it or being more specific."
             )
         render_result(result, answer, df)
 
@@ -125,11 +135,7 @@ def handle_question(question: str):
 
 
 if page == "Chat":
-    st.markdown(
-        "**You're chatting with a music-store database** — 11 tables of artists, "
-        "albums, tracks, customers, invoices and employees."
-    )
-    with st.expander("💡 What can I ask? (see the database contents)"):
+    with st.expander("💡 What can I ask? (Chinook, 11 tables)"):
         st.dataframe(pd.DataFrame(cached_overview(db_path)), width="stretch")
         st.caption("Below is the exact schema text the AI receives with every question:")
         st.code(cached_schema(db_path), language="sql")
@@ -150,7 +156,8 @@ if page == "Chat":
             st.caption(entry["meta"])
 
     if not st.session_state.history:
-        st.write("Try one of these:")
+        st.markdown("<div style='height:1.25rem'></div>", unsafe_allow_html=True)
+        st.caption("Try one of these:")
         cols = st.columns(2)
         for i, example in enumerate(EXAMPLE_QUESTIONS):
             if cols[i % 2].button(example, width="stretch"):
@@ -164,10 +171,9 @@ if page == "Chat":
 
 else:  # Stats
     st.header("Runtime stats")
-    st.caption("Every question asked in the app is logged locally — this page reads that log.")
     records = read_log(cfg["paths"]["runtime_log"])
     if not records:
-        st.info("No queries logged yet — ask something on the Chat page first.")
+        st.info("No queries logged yet. Ask something on the Chat page first.")
         st.stop()
 
     df = pd.DataFrame(records)
@@ -180,7 +186,8 @@ else:  # Stats
     c4.metric("Avg latency", f"{df['latency_s'].mean():.1f}s")
 
     st.subheader("By status")
-    st.bar_chart(df["status"].value_counts())
+    status_counts = df["status"].value_counts().rename_axis("status").reset_index(name="count")
+    st.bar_chart(status_counts, x="status", y="count", color="#00B894", horizontal=True)
 
     st.subheader("Recent queries")
     st.dataframe(

@@ -8,22 +8,24 @@ no API keys, no cloud, no data leaving the machine.
 > **You:** Which 3 countries have the most customers?
 > **App:** The three countries with the most customers are the USA, Canada and France.
 
+![The chat interface answering a question, showing the English answer, the results table, and the generated SQL](assets/chat.png)
+
 ## Highlights
 
-- **Fully on-device** — runs a 3B model through Ollama with no API keys, no cloud, and
+- **Fully on-device**: runs a 3B model through Ollama with no API keys, no cloud, and
   no data leaving the machine; the whole system fits on a laptop.
-- **Agentic self-correction** — it executes its own SQL and feeds the database's error
+- **Agentic self-correction**: it executes its own SQL and feeds the database's error
   messages back to the model to fix mistakes, rather than generating blindly in one shot.
-- **Safe by construction** — every query is *parsed into a syntax tree* and constrained
+- **Safe by construction**: every query is *parsed into a syntax tree* and constrained
   to a single read-only SELECT, so writes and injection (`SELECT 1; DROP TABLE x`) are
   structurally impossible, not just filtered by keyword. Backed by unit tests.
-- **Schema-aware prompting** — the model is shown table definitions, sample rows, the
+- **Schema-aware prompting**: the model is shown table definitions, sample rows, the
   exact stored values of low-cardinality columns (so it matches casing like `'usa'`),
-  and foreign-key join paths — context that measurably improves the SQL it writes.
-- **Evaluation-driven** — benchmarked on [Spider](https://yale-lily.github.io/spider)
+  and foreign-key join paths, giving context that measurably improves the SQL it writes.
+- **Evaluation-driven**: benchmarked on [Spider](https://yale-lily.github.io/spider)
   with execution accuracy, every experiment versioned in MLflow, and the *reproducible*
   number reported rather than a lucky one-off run.
-- **Observable** — a live stats page tracks success rate, retries, and latency per query.
+- **Observable**: a live stats page tracks success rate, retries, and latency per query.
 
 ## How it works
 
@@ -35,7 +37,7 @@ question → prompt (schema + sample rows + stored-value & join hints + rules)
 ```
 
 Execution accuracy is measured by running both the generated SQL and the reference SQL
-and checking they return the same rows (order-invariant) — different queries that yield
+and checking they return the same rows (order-invariant); different queries that yield
 the same answer both count as correct. An optional **self-consistency mode** (the `--sc`
 flag) samples N queries and takes the majority result for a small accuracy boost at ~N×
 latency. Off-topic questions ("what's the weather?") are refused.
@@ -43,7 +45,7 @@ latency. Off-topic questions ("what's the weather?") are refused.
 ## Results
 
 Execution accuracy on the Spider dev benchmark (fixed 200-question subset),
-single query per question (deterministic — the same every run):
+single query per question (deterministic, the same every run):
 
 | Model | Accuracy | Off-topic refusal |
 |---|---|---|
@@ -53,12 +55,17 @@ single query per question (deterministic — the same every run):
 | qwen2.5:1.5b | 52.5% | 85% |
 
 All models run locally on a laptop. `qwen2.5-coder:3b` is the default and is shown
-in its shipped configuration (which adds schema foreign-key hints — these don't
+in its shipped configuration (which adds schema foreign-key hints that don't
 change its accuracy but raise its off-topic refusal to 100%); the other models are
 in the base configuration, so the refusal column is not a like-for-like comparison.
 
 The 76.0% is the reproducible single-query number; self-consistency (below) can
 nudge it higher but samples with randomness, so that figure varies run to run.
+
+The app also has a live **runtime stats** page that reads the query log and tracks
+success rate, retries, and latency:
+
+![The runtime stats page showing total queries, success rate, average attempts and latency, plus a status breakdown](assets/stats.png)
 
 ## Quickstart
 
@@ -93,9 +100,9 @@ config.yaml      all settings in one place
 
 ## Design notes
 
-- **Verifiable, not a black box** — the generated SQL is always shown alongside the
+- **Verifiable, not a black box**: the generated SQL is always shown alongside the
   answer, so results can be checked; built as an analyst-assist tool.
-- **Deliberately focused** — a single agent in plain Python (no framework), local-first
+- **Deliberately focused**: a single agent in plain Python (no framework), local-first
   by design. A Dockerfile covers packaging; CI runs lint and tests on every push.
 - **~1 in 4 answers is still wrong** at this scale, which is why the SQL is always
-  visible — honest about being a 3B-on-a-laptop system, not a production oracle.
+  visible; it is honest about being a 3B-on-a-laptop system, not a production oracle.

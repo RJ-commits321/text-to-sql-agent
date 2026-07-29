@@ -8,3 +8,8 @@ address = "localhost"
 # Don't send usage telemetry to Streamlit Inc.
 [browser]
 gatherUsageStats = false
+
+# Accent color for focused inputs, the send button, spinners, etc.
+# (Streamlit's default is a coral red #FF4B4B, which looks like an error state.)
+[theme]
+primaryColor = "#00B894"
