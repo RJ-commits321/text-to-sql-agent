@@ -8,23 +8,37 @@ no API keys, no cloud, no data leaving the machine.
 > **You:** Which 3 countries have the most customers?
 > **App:** The three countries with the most customers are the USA, Canada and France.
 
+## Highlights
+
+- **Fully on-device** — runs a 3B model through Ollama with no API keys, no cloud, and
+  no data leaving the machine; the whole system fits on a laptop.
+- **Agentic self-correction** — it executes its own SQL and feeds the database's error
+  messages back to the model to fix mistakes, rather than generating blindly in one shot.
+- **Safe by construction** — every query is *parsed into a syntax tree* and constrained
+  to a single read-only SELECT, so writes and injection (`SELECT 1; DROP TABLE x`) are
+  structurally impossible, not just filtered by keyword. Backed by unit tests.
+- **Schema-aware prompting** — the model is shown table definitions, sample rows, the
+  exact stored values of low-cardinality columns (so it matches casing like `'usa'`),
+  and foreign-key join paths — context that measurably improves the SQL it writes.
+- **Evaluation-driven** — benchmarked on [Spider](https://yale-lily.github.io/spider)
+  with execution accuracy, every experiment versioned in MLflow, and the *reproducible*
+  number reported rather than a lucky one-off run.
+- **Observable** — a live stats page tracks success rate, retries, and latency per query.
+
 ## How it works
 
 ```
-question → prompt (schema + sample rows + few-shot examples + rules)
+question → prompt (schema + sample rows + stored-value & join hints + rules)
          → LLM writes SQL → guardrails validate → execute (read-only)
          → on error: feed the DB error back, retry (max 3)
          → results + one-sentence answer
 ```
 
-- **Self-correction** — the database's own error messages are fed back to the model.
-- **Guardrails** — single read-only SELECT only (validated by parsing, not keyword
-  matching), row-limit injection, 10s timeout. Off-topic questions are refused.
-- **Self-consistency mode** (optional) — sample 3 queries, run all, take the majority
-  result; higher accuracy for higher latency.
-- **Evaluation** — scored on the [Spider](https://yale-lily.github.io/spider) benchmark
-  by execution accuracy (the generated SQL must return the same rows as the reference
-  SQL), with every run tracked in MLflow.
+Execution accuracy is measured by running both the generated SQL and the reference SQL
+and checking they return the same rows (order-invariant) — different queries that yield
+the same answer both count as correct. An optional **self-consistency mode** (the `--sc`
+flag) samples N queries and takes the majority result for a small accuracy boost at ~N×
+latency. Off-topic questions ("what's the weather?") are refused.
 
 ## Results
 
@@ -43,9 +57,8 @@ in its shipped configuration (which adds schema foreign-key hints — these don'
 change its accuracy but raise its off-topic refusal to 100%); the other models are
 in the base configuration, so the refusal column is not a like-for-like comparison.
 
-Enabling self-consistency (sample 3, majority vote) typically adds a small boost,
-but it samples with randomness so the exact figure varies run to run (~76–78%);
-the 76.0% above is the reproducible single-query number.
+The 76.0% is the reproducible single-query number; self-consistency (below) can
+nudge it higher but samples with randomness, so that figure varies run to run.
 
 ## Quickstart
 
@@ -65,10 +78,8 @@ uv run python eval/run_eval.py --model qwen2.5-coder:3b    # run + log to MLflow
 uv run mlflow ui                                           # view results
 ```
 
-Add `--sc 3` to enable self-consistency: the agent samples 3 candidate queries
-per question, runs all three, and takes the majority result. Higher accuracy
-(~76–78%), ~3x the latency, and not reproducible run to run — it samples with
-randomness, so the exact figure varies.
+Add `--sc 3` to enable self-consistency (majority vote over 3 samples): ~76–78%
+accuracy at ~3× the latency.
 
 ## Structure
 
@@ -80,13 +91,11 @@ tests/           unit tests (guardrail cases run without an LLM)
 config.yaml      all settings in one place
 ```
 
-## Design
+## Design notes
 
-- **Evaluation-driven** — measured on a standard benchmark with a reproducible harness
-  and every run tracked in MLflow.
-- **Safe by construction** — model output is parsed and constrained to a single
-  read-only SELECT; write and injection attempts are rejected and unit-tested.
-- **Verifiable** — the generated SQL is always shown, so the answer can be checked;
-  built as an analyst-assist tool rather than a black box.
-- **Deliberately focused** — single agent, local-first, no framework. A Dockerfile
-  covers packaging; CI runs lint and tests on every push.
+- **Verifiable, not a black box** — the generated SQL is always shown alongside the
+  answer, so results can be checked; built as an analyst-assist tool.
+- **Deliberately focused** — a single agent in plain Python (no framework), local-first
+  by design. A Dockerfile covers packaging; CI runs lint and tests on every push.
+- **~1 in 4 answers is still wrong** at this scale, which is why the SQL is always
+  visible — honest about being a 3B-on-a-laptop system, not a production oracle.
