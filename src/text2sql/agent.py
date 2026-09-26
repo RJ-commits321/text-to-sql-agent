@@ -10,6 +10,7 @@ import sqlite3
 import time
 from collections import Counter
 from dataclasses import dataclass, field
+from pathlib import Path
 
 from . import llm
 from .guardrails import GuardrailError, enforce_limit, execute, extract_sql, validate
@@ -29,20 +30,36 @@ class AgentResult:
     error: str | None = None
 
 
+_AUTO = object()  # sentinel: retrieve examples internally unless the caller supplies them
+
+
 def answer_question(
     question: str,
     db_path: str,
     cfg: dict,
     schema: str | None = None,
     model: str | None = None,
+    examples=_AUTO,
 ) -> AgentResult:
     schema = schema or get_schema(db_path)
     model = model or cfg["llm"]["model"]
+    if examples is _AUTO:  # app path: retrieve live; eval pre-retrieves and passes them in
+        examples = _retrieve_examples(question, cfg)
 
     k = cfg["agent"].get("self_consistency", 1)
     if k > 1:
-        return _answer_self_consistency(question, db_path, cfg, schema, model, k)
-    return _answer_greedy(question, db_path, cfg, schema, model)
+        return _answer_self_consistency(question, db_path, cfg, schema, model, k, examples)
+    return _answer_greedy(question, db_path, cfg, schema, model, examples)
+
+
+def _retrieve_examples(question: str, cfg: dict) -> list[tuple[str, str]] | None:
+    """Top-k similar Spider-train examples when dynamic few-shot is enabled, else None."""
+    if not cfg["agent"].get("dynamic_fewshot"):
+        return None
+    from .fewshot import retrieve
+
+    index_path = str(Path(cfg["paths"]["fewshot_index"]))
+    return retrieve(question, index_path, k=cfg["agent"].get("fewshot_k", 3))
 
 
 def _validated_execute(
@@ -61,10 +78,10 @@ def _validated_execute(
 
 
 def _answer_greedy(
-    question: str, db_path: str, cfg: dict, schema: str, model: str
+    question: str, db_path: str, cfg: dict, schema: str, model: str, examples=None
 ) -> AgentResult:
     start = time.monotonic()
-    messages = build_messages(question, schema)
+    messages = build_messages(question, schema, examples)
 
     last_error = None
     last_sql = None
@@ -127,10 +144,10 @@ def majority_pick(candidates: list[tuple]) -> tuple:
 
 
 def _answer_self_consistency(
-    question: str, db_path: str, cfg: dict, schema: str, model: str, k: int
+    question: str, db_path: str, cfg: dict, schema: str, model: str, k: int, examples=None
 ) -> AgentResult:
     start = time.monotonic()
-    messages = build_messages(question, schema)
+    messages = build_messages(question, schema, examples)
     temperature = cfg["agent"].get("sc_temperature", 0.7)
 
     candidates = []
@@ -169,7 +186,7 @@ def _answer_self_consistency(
         )
 
     # no sample produced working SQL — fall back to the greedy self-correction loop
-    result = _answer_greedy(question, db_path, cfg, schema, model)
+    result = _answer_greedy(question, db_path, cfg, schema, model, examples)
     result.attempts += k
     result.latency_s = time.monotonic() - start
     return result

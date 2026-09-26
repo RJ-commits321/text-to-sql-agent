@@ -69,6 +69,9 @@ def render_result(result, answer, df):
     st.write(answer)
     if df is not None and not df.empty:
         st.dataframe(df, width="stretch")
+        cap = cfg["guardrails"].get("max_result_rows", 500)
+        if len(df) >= cap:
+            st.caption(f"Showing the first {cap} rows; the full result may contain more.")
     if result.sql:
         with st.expander("Show the SQL it wrote"):
             st.code(result.sql, language="sql")

@@ -30,9 +30,14 @@ from text2sql.prompts import PROMPT_VERSION  # noqa: E402
 from text2sql.schema import get_schema  # noqa: E402
 
 
-def run_spider(cfg: dict, model: str, limit: int | None, full: bool) -> None:
+def run_spider(
+    cfg: dict, model: str, limit: int | None, full: bool, source_file: str | None = None
+) -> None:
     spider_dir = ROOT / cfg["paths"]["spider_dir"]
-    source = spider_dir / "dev.json" if full else ROOT / cfg["eval"]["subset_file"]
+    if source_file:
+        source = ROOT / source_file
+    else:
+        source = spider_dir / "dev.json" if full else ROOT / cfg["eval"]["subset_file"]
     items = json.loads(source.read_text(encoding="utf-8"))
     if limit:
         items = items[:limit]
@@ -48,6 +53,23 @@ def run_spider(cfg: dict, model: str, limit: int | None, full: bool) -> None:
         },
     }
 
+    # Dynamic few-shot: retrieve all examples up front (embed model only), then free
+    # the embed model, so the SQL model runs alone — avoids two models thrashing in RAM.
+    example_map: dict[str, list] = {}
+    if cfg["agent"].get("dynamic_fewshot"):
+        import subprocess
+
+        from text2sql.fewshot import retrieve_batch
+
+        questions = [it["question"] for it in items]
+        print(f"pre-retrieving few-shot examples for {len(questions)} questions...")
+        batched = retrieve_batch(
+            questions, str(ROOT / cfg["paths"]["fewshot_index"]), cfg["agent"].get("fewshot_k", 3)
+        )
+        example_map = dict(zip(questions, batched))
+        subprocess.run(["ollama", "stop", "nomic-embed-text"], capture_output=True)  # noqa: S603,S607
+        print("embed model unloaded; running generation.")
+
     schemas: dict[str, str] = {}
     results = []
     correct = ok = cannot = attempts_total = 0
@@ -58,8 +80,9 @@ def run_spider(cfg: dict, model: str, limit: int | None, full: bool) -> None:
         if item["db_id"] not in schemas:
             schemas[item["db_id"]] = get_schema(db_path)
 
+        kwargs = {"examples": example_map[item["question"]]} if example_map else {}
         res = answer_question(
-            item["question"], db_path, cfg, schema=schemas[item["db_id"]], model=model
+            item["question"], db_path, cfg, schema=schemas[item["db_id"]], model=model, **kwargs
         )
         attempts_total += res.attempts
 
@@ -101,7 +124,7 @@ def run_spider(cfg: dict, model: str, limit: int | None, full: bool) -> None:
 
     out_dir = ROOT / "eval" / "results"
     out_dir.mkdir(parents=True, exist_ok=True)
-    tag = "full" if full else f"subset{n}"
+    tag = Path(source_file).stem if source_file else ("full" if full else f"subset{n}")
     out_file = out_dir / f"{model.replace(':', '_')}_{tag}_{int(time.time())}.jsonl"
     with open(out_file, "w", encoding="utf-8") as f:
         for r in results:
@@ -117,8 +140,9 @@ def run_spider(cfg: dict, model: str, limit: int | None, full: bool) -> None:
                 "temperature": cfg["llm"]["temperature"],
                 "max_attempts": cfg["agent"]["max_attempts"],
                 "self_consistency": cfg["agent"].get("self_consistency", 1),
+                "dynamic_fewshot": cfg["agent"].get("dynamic_fewshot", False),
                 "n_questions": n,
-                "dataset": "spider-dev-full" if full else "spider-dev-subset",
+                "dataset": tag,
             }
         )
         mlflow.log_metrics(metrics)
@@ -164,14 +188,19 @@ if __name__ == "__main__":
     parser.add_argument("--full", action="store_true", help="full 1,034-question dev set")
     parser.add_argument("--offtopic", action="store_true", help="run the refusal test instead")
     parser.add_argument("--sc", type=int, default=None, help="self-consistency samples (e.g. 3)")
+    parser.add_argument("--set", dest="set_file", default=None,
+                        help="run on a specific question file, e.g. eval/test_holdout.json")
+    parser.add_argument("--dynamic", action="store_true", help="enable dynamic few-shot retrieval")
     args = parser.parse_args()
 
     cfg = load_config(ROOT / "config.yaml")
     if args.sc:
         cfg["agent"]["self_consistency"] = args.sc
+    if args.dynamic:
+        cfg["agent"]["dynamic_fewshot"] = True
     model = args.model or cfg["llm"]["model"]
 
     if args.offtopic:
         run_offtopic(cfg, model)
     else:
-        run_spider(cfg, model, args.limit, args.full)
+        run_spider(cfg, model, args.limit, args.full, args.set_file)

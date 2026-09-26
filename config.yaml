@@ -12,6 +12,8 @@ agent:
   max_attempts: 3              # 1 initial try + up to 2 self-corrections
   self_consistency: 1          # >1 = sample N queries, majority result wins (N× latency)
   sc_temperature: 0.7          # sampling temperature when self_consistency > 1
+  dynamic_fewshot: false       # true = retrieve similar Spider-train examples per question
+  fewshot_k: 3                 # number of retrieved examples when dynamic_fewshot is on
 
 guardrails:
   row_limit: 100               # LIMIT injected into queries that lack one (UI only)
@@ -22,6 +24,8 @@ paths:
   demo_db: data/chinook.db
   spider_dir: data/spider
   runtime_log: logs/queries.jsonl
+  spider_train: data/spider/train_spider.json   # retrieval pool for dynamic few-shot
+  fewshot_index: eval/fewshot_index.npz          # built by eval/build_fewshot_index.py
 
 eval:
   subset_size: 200

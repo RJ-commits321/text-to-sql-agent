@@ -22,7 +22,13 @@ Before writing the query, check which table each column belongs to.
 (weather, news, or entities with no matching table). If the question relates to any table \
 in the schema, always attempt a query.
 
-Examples (these use a different toy schema):
+{examples}
+Now the real schema:
+
+{schema}"""
+
+# Fixed few-shot examples (a toy schema) used when dynamic few-shot is off.
+DEFAULT_EXAMPLES = """Examples (these use a different toy schema):
 
 Schema:
 CREATE TABLE departments (id INTEGER PRIMARY KEY, name TEXT);
@@ -41,15 +47,30 @@ SQL: SELECT name FROM employees ORDER BY birth_date ASC LIMIT 1;
 
 Question: What is the weather today?
 SQL: CANNOT_ANSWER
-
-Now the real schema:
-
-{schema}"""
+"""
 
 
-def build_messages(question: str, schema: str) -> list[dict]:
+def format_examples(pairs: list[tuple[str, str]]) -> str:
+    """Format retrieved (question, SQL) pairs as few-shot examples. These come from
+    OTHER databases, so the model is told to copy structure, not exact names."""
+    lines = [
+        "Examples of similar questions solved on OTHER databases "
+        "(use them for query structure, not exact table/column names):",
+        "",
+    ]
+    for q, sql in pairs:
+        lines.append(f"Question: {q}")
+        lines.append(f"SQL: {sql}")
+        lines.append("")
+    return "\n".join(lines)
+
+
+def build_messages(
+    question: str, schema: str, examples: list[tuple[str, str]] | None = None
+) -> list[dict]:
+    ex_text = format_examples(examples) if examples else DEFAULT_EXAMPLES
     return [
-        {"role": "system", "content": SYSTEM_TEMPLATE.format(schema=schema)},
+        {"role": "system", "content": SYSTEM_TEMPLATE.format(examples=ex_text, schema=schema)},
         {"role": "user", "content": f"Question: {question}\nSQL:"},
     ]
 

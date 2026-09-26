@@ -11,6 +11,7 @@ logs/
 mlruns/
 mlflow.db
 eval/results/
+eval/fewshot_index.npz
 
 # private notes
 notes-text2sql/
